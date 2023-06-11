@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Error</title>
+	<title>{{Payload.Title}}</title>
 </head>
 
 <body>
 	<h1>Blog in Express.JS</h1>
-	<h2>Error :(</h2>
+	<h2>{{Payload.Title}}</h2>
 
-	{{>error-div.hbs Error}}
+	<div>
+		{{{Payload.Content}}}
+	</div>
 </body>
 </html>

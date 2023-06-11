@@ -18,7 +18,7 @@ function SigninHandler(r, w) {
 	}
 
 	if (r.body.Email != "admin@express.blog") {
-		tmpl.WriteTemplate(w, "signin.hbs", 404, r.body, "user with this email doesn't exist");
+		tmpl.WriteTemplate(w, "signin.hbs", 404, r.body, "user with this email does not exist");
 		return;
 	}
 

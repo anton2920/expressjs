@@ -37,7 +37,21 @@ function init() {
 }
 
 function BlogDisplayTmplHandler(r, w) {
+	var filename = BlogDirName + "/" + PageFilePrefix + r.params["PageNumber"] + PageFileSuffix;
+	
+	try {
+		var pageJSON = fs.readFileSync(filename, "utf-8");
+	} catch(e) {
+		if (e.code == "ENOENT") {
+			tmpl.WriteTemplate(w, "error.hbs", 400, null, "blog page does not exist");
+		} else {
+			tmpl.WriteTemplate(w, "error.hbs", 500, null, errors.TryAgainLaterError);
+		}
+		return;
+	}
+	var page = JSON.parse(pageJSON);
 
+	tmpl.WriteTemplate(w, "page.hbs", 200, page, null);
 }
 
 function BlogCreateTmplHandler(r, w) {

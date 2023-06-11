@@ -12,7 +12,9 @@ var Tmpls;
 function InitTemplates() {
 	Tmpls = {
 		"create.hbs": handlebars.compile(fs.readFileSync(TemplatesDirectory+"/create.hbs", "utf8")),
+		"error.hbs": handlebars.compile(fs.readFileSync(TemplatesDirectory+"/error.hbs", "utf8")),
 		"index.hbs": handlebars.compile(fs.readFileSync(TemplatesDirectory+"/index.hbs", "utf8")),
+		"page.hbs": handlebars.compile(fs.readFileSync(TemplatesDirectory+"/page.hbs", "utf8")),
 		"signin.hbs": handlebars.compile(fs.readFileSync(TemplatesDirectory+"/signin.hbs", "utf8")),
 		"signup.hbs": handlebars.compile(fs.readFileSync(TemplatesDirectory+"/signup.hbs", "utf8")),
 	};

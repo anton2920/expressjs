@@ -1,6 +1,7 @@
 "use strict";
 
 const blog = require("./blog.js");
+const errors = require("./errors.js");
 const index = require("./index.js");
 const sessions = require("./sessions.js");
 const signin = require("./signin.js");
@@ -30,6 +31,8 @@ function main() {
 	App.post(APIPrefix+"/create", blog.BlogCreateHandler);
 	App.post(APIPrefix+"/signin", signin.SigninHandler);
 	App.get(APIPrefix+"/signout", signout.SignoutHandler);
+
+	App.get("*", errors.InvalidRouteHandler);
 	
 	App.listen(Port, function() {
 		console.log(`Listening on port ${Port}`);

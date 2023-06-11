@@ -1,23 +1,21 @@
 "use strict";
 
-module.exports = { init, BlogDisplayTmplHandler, BlogCreateTmplHandler, BlogCreateHandler };
+module.exports = { init, PageFileIDLast, GetPageFileTitle, BlogDisplayTmplHandler };
 
-const errors = require("./errors.js");
-const sessions = require("./sessions.js");
 const tmpl = require("./tmpl.js");
-const utils = require("./utils.js");
 
 const fs = require("fs");
 
 const BlogDirName = "./blog";
-
 const PageFilePrefix = "page_";
 const PageFileIDPad  = "00000";
 const PageFileSuffix = ".json";
 
-var PageFileIDLast = 0;
+var PageFileIDLast;
 
 function init() {
+	PageFileIDLast = 0;
+
 	fs.mkdir(BlogDirName, { recursive: true }, function(err) {
 		if (err != null) {
 			console.log("ERROR: failed to create blog directory: ", err);
@@ -34,6 +32,14 @@ function init() {
 			++PageFileIDLast;
 		});	
 	});
+
+	module.exports.PageFileIDLast = PageFileIDLast;
+}
+
+function GetPageFileTitle() {
+	PageFileIDLast = module.exports.PageFileIDLast;
+	var pageID = (PageFileIDPad + PageFileIDLast).slice(-PageFileIDPad.length);
+	return BlogDirName + "/" + PageFilePrefix + pageID + PageFileSuffix;
 }
 
 function BlogDisplayTmplHandler(r, w) {
@@ -52,56 +58,4 @@ function BlogDisplayTmplHandler(r, w) {
 	var page = JSON.parse(pageJSON);
 
 	tmpl.WriteTemplate(w, "page.hbs", 200, page, null);
-}
-
-function BlogCreateTmplHandler(r, w) {
-	tmpl.WriteTemplate(w, "create.hbs", 200, null, null);
-}
-
-function GetPageFileTitle() {
-	var pageID = (PageFileIDPad + PageFileIDLast).slice(-PageFileIDPad.length);
-	return BlogDirName + "/" + PageFilePrefix + pageID + PageFileSuffix;
-}
-
-function BlogCreateHandler(r, w) {
-	var token = r.cookies["token"]
-	if (token == undefined) {
-		w.status(401);
-		return;
-	}
-	var session = sessions.GetSessionFromToken(token)
-	if (session == undefined) {
-		w.status(401);
-		return;
-	}
-
-	if (!utils.ParamsValidate(r.body, true, "Title", "Content")) {
-		tmpl.WriteTemplate(w, "create.hbs", 400, r.body, errors.ReloadPageError);
-		return;
-	}
-
-	const minTitleLen = 1;
-	const maxTitleLen = 45;
-	if (!utils.IsStringLengthInRange(r.body.Title, minTitleLen, maxTitleLen)) {
-		tmpl.WriteTemplate(w, "create.hbs", 400, r.body, `title length must be between ${minTitleLen} and ${maxTitleLen} characters long`);
-		return;
-	}
-
-	const minContentsLen = 1;
-	const maxContentsLen = 16384;
-	if (!utils.IsStringLengthInRange(r.body.Title, minContentsLen, maxContentsLen)) {
-		tmpl.WriteTemplate(w, "create.hbs", 400, r.body, `contents length must be between ${minContentsLen} and ${maxContentsLen} characters long`);
-		return;
-	}
-
-	fs.writeFile(GetPageFileTitle(), JSON.stringify(r.body), function(err) {
-		if (err != null) {
-			console.log("ERROR: failed to store blog post: ", err);
-			tmpl.WriteTemplate(w, "error.hbs", 500, null, errors.TryAgainLaterError);
-			return;
-		}
-		++PageFileIDLast;
-	});
-
-	w.redirect(303, "/");
 }

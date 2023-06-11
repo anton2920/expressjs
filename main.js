@@ -1,6 +1,7 @@
 "use strict";
 
 const blog = require("./blog.js");
+const blogCreate = require("./blog_create.js");
 const errors = require("./errors.js");
 const index = require("./index.js");
 const sessions = require("./sessions.js");
@@ -23,12 +24,12 @@ function main() {
 	App.use(cookieParser());
 
 	App.get("/", index.IndexTmplHandler);
-	App.get("/create", blog.BlogCreateTmplHandler);
+	App.get("/create", blogCreate.BlogCreateTmplHandler);
 	App.get("/page_:PageNumber([0-9]+)", blog.BlogDisplayTmplHandler);
 	App.get("/signin", signin.SigninTmplHandler);
 	App.get("/signup", signup.SignupTmplHandler);
 
-	App.post(APIPrefix+"/create", blog.BlogCreateHandler);
+	App.post(APIPrefix+"/create", blogCreate.BlogCreateHandler);
 	App.post(APIPrefix+"/signin", signin.SigninHandler);
 	App.get(APIPrefix+"/signout", signout.SignoutHandler);
 
@@ -40,4 +41,5 @@ function main() {
 }
 
 blog.init();
+sessions.init();
 main();

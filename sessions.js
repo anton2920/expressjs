@@ -1,5 +1,7 @@
 "use strict";
 
+module.exports = { init, Sessions, GetSessionFromToken, GenerateSessionToken };
+
 const crypto = require("crypto");
 
 /* NOTE(anton2920):
@@ -12,9 +14,12 @@ const crypto = require("crypto");
 /* NOTE(anton2920):
  * map[string]SessionInfo
  * I also hope that there won't be any race conditions. */
-const Sessions = new Map();
+var Sessions; 
 
-module.exports = { Sessions, GetSessionFromToken, GenerateSessionToken };
+function init() {
+	Sessions = new Map()
+	module.exports.Sessions = Sessions;
+}
 
 function GetSessionFromToken(token) {
 	var session = Sessions.get(token)

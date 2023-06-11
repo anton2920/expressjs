@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Sign in</title>
+</head>
+
+<body>
+	<h1>Blog in Express.JS</h1>
+	<h2>Sign in</h2>
+
+	{{>error-div.hbs Error}}
+
+	<form method="POST" action="/api/signin">
+		<label>Email:<br>
+			<input type="text" name="Email" value={{Payload.Email}}>
+		</label>
+		<br><br>
+
+		<label>Password:<br>
+			<input type="password" name="Password">
+		</label>
+		<br><br>
+
+		<input type="submit" value="Sign in">
+		<br><br>
+
+		<span>Don't have an account?
+			<a href="/signup">Sign up</a>
+		</span>
+	</form>
+</body>
+</html>

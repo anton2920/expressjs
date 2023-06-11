@@ -1,4 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Blog in Express.JS</title>
+</head>
+
 <body>
 	<h1>Blog in Express.JS</h1>
 	<h2>Why not use Go?</h2>
+
+	{{#if Payload.signedIn}}
+	<a href="/signout">Sign out</a>
+	{{else}}
+	<a href="/signin">Sign in</a>
+	<a href="/signup">Sign up</a>
+	{{/if}}
 </body>
+</html>

@@ -1,34 +1,31 @@
 "use strict";
 
+const index = require("./index.js");
+const signin = require("./signin.js");
+const signup = require("./signup.js");
+const tmpl = require("./tmpl.js");
 
-/* tmpl.js */
-const FS = require("fs");
-const HBS = require("handlebars");
-var Tmpls;
+const express = require("express");
+const cookieParser = require("cookie-parser");
 
-function InitTemplates()
-{
-	Tmpls = {
-		"index.hbs": HBS.compile(FS.readFileSync("./templates/index.hbs", "utf8")),
-	};
-}
-
-function WriteTemplate(w, tmpl, code, payload, err)
-{
-	w.status(code).send(Tmpls[tmpl]({payload, err}));
-}
-
-
-/* main.js */
-const Express = require('express');
-const App = Express();
+const App = express();
 const Port = 8080;
+const APIPrefix = "/api";
 
-App.get("/", function(r, w) {
-	WriteTemplate(w, "index.hbs", 200, undefined, undefined);
-});
+function main() {
+	App.use(express.urlencoded({ extended: true }));
+	App.use(cookieParser());
 
-App.listen(Port, function() {
-	InitTemplates();
-	console.log(`Listening on port ${Port}`);
-});
+	App.get("/", index.IndexTmplHandler);
+	App.get("/signin", signin.SigninTmplHandler);
+	App.get("/signup", signup.SignupTmplHandler);
+	
+	App.post(APIPrefix+"/signin", signin.SigninHandler);
+	
+	App.listen(Port, function() {
+		tmpl.InitTemplates();
+		console.log(`Listening on port ${Port}`);
+	});
+}
+
+main();

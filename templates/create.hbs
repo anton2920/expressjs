@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Create new post</title>
+</head>
+
+<body>
+	<h1>Blog in Express.JS</h1>
+	<h2>Create new post</h2>
+
+	{{>error-div.hbs Error}}
+
+	<form method="POST" action="/api/create">
+		<label>Title:<br>
+			<input type="text" minlength="5" maxlength="45" name="Title" value="{{Payload.Title}}" required>
+		</label>
+		<br><br>
+
+		<label>Content (use HTML):<br>
+			<textarea rows="24" cols="80" minlength="1" maxlength="16384" name="Content" required>{{Payload.Content}}</textarea>
+		</label>
+		<br><br>
+
+		<input type="submit" value="Publish">
+	</form>
+</body>
+</html>

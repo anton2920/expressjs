@@ -2,24 +2,29 @@
 
 module.exports = { SigninTmplHandler, SigninHandler };
 
+const errors = require("./errors.js");
 const sessions = require("./sessions.js");
 const tmpl = require("./tmpl.js");
+const utils = require("./utils.js");
 
 function SigninTmplHandler(r, w) {
 	tmpl.WriteTemplate(w, "signin.hbs", 200, null, null);
 }
 
 function SigninHandler(r, w) {
-	/* TODO(anton2920): store users in DB. */
-	if (r.body.Email != "admin@express.blog") {
-		tmpl.WriteTemplate(w, "signin.hbs", 404, r.body, "user with this email doesn't exist");
+	if (!utils.ParamsValidate(r.body, true, "Email", "Password")) {
+		tmpl.WriteTemplate(w, "signin.hbs", 400, r.body, errors.ReloadPageError);
+		return;
 	}
 
-	/* TODO(anton2920): use something like 'bcrypt.CompareHashAndPassword()'
-	 * instead of strings comparison.
-	 */
+	if (r.body.Email != "admin@express.blog") {
+		tmpl.WriteTemplate(w, "signin.hbs", 404, r.body, "user with this email doesn't exist");
+		return;
+	}
+
 	if (r.body.Password != "why-not-use-go") {
 		tmpl.WriteTemplate(w, "signin.hbs", 409, r.body, "provided password is incorrect");
+		return;
 	}
 
 	const oneWeek = 7 * 24 * 60 * 60 * 1000;

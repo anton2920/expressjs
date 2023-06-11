@@ -12,12 +12,12 @@
 
 	<form method="POST" action="/api/signin">
 		<label>Email:<br>
-			<input type="text" name="Email" value={{Payload.Email}}>
+			<input type="text" name="Email" value="{{Payload.Email}}" required>
 		</label>
 		<br><br>
 
 		<label>Password:<br>
-			<input type="password" name="Password">
+			<input type="password" name="Password" required>
 		</label>
 		<br><br>
 

@@ -9,8 +9,6 @@ const TemplatesDirectory = "./templates"
 
 var Tmpls;
 
-
-
 function InitTemplates() {
 	Tmpls = {
 		"create.hbs": handlebars.compile(fs.readFileSync(TemplatesDirectory+"/create.hbs", "utf8")),

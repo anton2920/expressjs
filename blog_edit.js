@@ -31,7 +31,7 @@ function BlogEditTmplHandler(r, w) {
 	var filename = blog.GetPageFileName(pageID);
 
 	try {
-		var pageJSON = fs.readFileSync(filename);
+		var pageJSON = fs.readFileSync(filename, "utf8");
 	} catch(err) {
 		if (err.code == "ENOENT") {
 			tmpl.WriteTemplate(w, "error.hbs", 400, null, "blog page does not exist");
@@ -59,7 +59,7 @@ function BlogEditHandler(r, w) {
 		return;
 	}
 
-	if (!utils.ParamsValidate(r.body, true, "PageID", "Title", "Content", "CreatedOn")) {
+	if (!utils.ParamsValidate(r.body, true, "PageID", "CreatedOn", "Title", "Summary", "Content")) {
 		tmpl.WriteTemplate(w, "create.hbs", 400, r.body, errors.ReloadPageError);
 		return;
 	}
@@ -71,13 +71,19 @@ function BlogEditHandler(r, w) {
 		return;
 	}
 
+	const minSummaryLen = 1;
+	const maxSummaryLen = 128;
+	if (!utils.IsStringLengthInRange(r.body.Summary, minSummaryLen, maxSummaryLen)) {
+		tmpl.WriteTemplate(w, "create.hbs", 400, r.body, `summary length must be between ${minSummaryLen} and ${maxSummaryLen} characters long`);
+		return;
+	}
+
 	const minContentsLen = 1;
 	const maxContentsLen = 16384;
 	if (!utils.IsStringLengthInRange(r.body.Title, minContentsLen, maxContentsLen)) {
 		tmpl.WriteTemplate(w, "edit.hbs", 400, r.body, `contents length must be between ${minContentsLen} and ${maxContentsLen} characters long`);
 		return;
 	}
-	r.body.CreatedOn = +r.body.CreatedOn;
 	r.body.UpdatedOn = Date.now();
 
 	var pageID = r.body.PageID;

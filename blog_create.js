@@ -14,6 +14,13 @@ function BlogCreateTmplHandler(r, w) {
 	tmpl.WriteTemplate(w, "create.hbs", 200, null, null);
 }
 
+function DateNowString() {
+	var date = new Date(Date.now());
+	var offset = date.getTimezoneOffset()
+	date = new Date(date.getTime() - (offset*60*1000))
+	return date.toISOString().split('T')[0]
+}
+
 function BlogCreateHandler(r, w) {
 	var token = r.cookies["token"]
 	if (token == undefined) {
@@ -26,7 +33,7 @@ function BlogCreateHandler(r, w) {
 		return;
 	}
 
-	if (!utils.ParamsValidate(r.body, true, "Title", "Content")) {
+	if (!utils.ParamsValidate(r.body, true, "Title", "Summary", "Content")) {
 		tmpl.WriteTemplate(w, "create.hbs", 400, r.body, errors.ReloadPageError);
 		return;
 	}
@@ -38,14 +45,20 @@ function BlogCreateHandler(r, w) {
 		return;
 	}
 
+	const minSummaryLen = 1;
+	const maxSummaryLen = 128;
+	if (!utils.IsStringLengthInRange(r.body.Summary, minSummaryLen, maxSummaryLen)) {
+		tmpl.WriteTemplate(w, "create.hbs", 400, r.body, `summary length must be between ${minSummaryLen} and ${maxSummaryLen} characters long`);
+		return;
+	}
+
 	const minContentsLen = 1;
 	const maxContentsLen = 16384;
 	if (!utils.IsStringLengthInRange(r.body.Title, minContentsLen, maxContentsLen)) {
 		tmpl.WriteTemplate(w, "create.hbs", 400, r.body, `contents length must be between ${minContentsLen} and ${maxContentsLen} characters long`);
 		return;
 	}
-	r.body.CreatedOn = Date.now();
-	r.body.UpdatedOn = Date.now();
+	r.body.CreatedOn = DateNowString();
 
 	fs.writeFile(blog.GetPageFileName(blog.PageFileIDLast), JSON.stringify(r.body), function(err) {
 		if (err != null) {

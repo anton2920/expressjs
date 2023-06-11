@@ -2,6 +2,89 @@
 <html lang="en">
 <head>
 	<title>Blog in Express.JS</title>
+
+	<style>
+		.date {
+			font-size: 83%;
+			color: #666;
+		}
+
+		.summary {
+			margin-left: 2em;
+		}
+
+		h3 .normal {
+			margin: 0;
+			padding: 0;
+			display: inline-block;
+			font-weight: normal;
+			font-size: 80%;
+			color: #666;
+		}
+	</style>
+
+	<script defer>
+		fetch("/api/pages")
+		.then(function(r) {
+			return r.json();
+		})
+		.then(function(pages) {
+			var pagesDiv = document.getElementById("pages");
+			for (var page of pages) {
+				var pageDiv = document.createElement("div");
+				pageDiv.innerHTML = `
+<a href="${page.ID}">${page.Title}</a>
+<span class="date">created on: ${page.CreatedOn}.</span>
+<div class="summary">
+	${page.Summary}.
+</div>
+`;
+				pagesDiv.append(pageDiv);
+			}
+		})
+		.catch(function(err) {
+			console.log("ERROR: failed to fetch pages JSON: ", err);
+		});
+	</script>
+
+	<script>
+		function SortingChanged() {
+			var pagesDiv = document.getElementById("pages");
+			var sortValue = document.getElementById("sortValue");
+			var sortOrder = document.getElementById("sortOrder");
+
+			var pages = pagesDiv.children;
+			pages = Array.prototype.slice.call(pages, 0);
+			pages.sort(function(a, b) {
+				var diff;
+
+				var aA = a.querySelector("a");
+				var bA = b.querySelector("a")
+
+				switch (sortValue.value) {
+				case "CreatedOn":
+					diff = (aA.getAttribute("href") < bA.getAttribute("href"));
+					break;
+				case "Title":
+					diff = (aA.innerHTML < bA.innerHTML);
+					break;
+				}
+
+				switch (sortOrder.value) {
+				case "Descending":
+					diff = !diff;
+					break;
+				}
+
+				return (diff ? -1 : 1);
+			});
+
+			pagesDiv.innerHTML = "";
+			for (var page of pages) {
+				pagesDiv.append(page);
+			}
+		}
+	</script>
 </head>
 
 <body>
@@ -15,5 +98,23 @@
 	<a href="/signin">Sign in</a>
 	<a href="/signup">Sign up</a>
 	{{/if}}
+	<br><br>
+
+	<h3>Table of contents | 
+		<div class="normal">
+			<span>sort by:</span>
+			<select class="normal" id="sortValue" onchange="SortingChanged()">
+				<option value="CreatedOn">created on</option>
+				<option value="Title">title</option>
+			</select>
+			<select class="normal" id="sortOrder" onchange="SortingChanged()">
+				<option value="Ascending">ascending</option>
+				<option value="Descending">descending</option>
+			</select>
+		</div>
+	</h3>
+	<div id="pages">
+		<!-- NOTE(anton2920): will be filled with JavaScript -->
+	</div>
 </body>
 </html>

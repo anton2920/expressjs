@@ -1,24 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>{{Payload.Title}}</title>
+	<title>Blog in Express.JS: {{Payload.Title}}</title>
+
+	<style>
+		body {
+			padding: 0;
+			margin: 0;
+		}
+
+		.header {
+			height: 1.25em;
+			background-color: #dff;
+			margin: 0;
+			padding: 0.1em 0.1em 0.2em;
+			border-top: 1px solid black;
+			border-bottom: 1px solid #8ff;
+		}
+
+		.header h3 {
+			margin: 0;
+			padding: 0 2em;
+			display: inline-block;
+			padding-right: 2em;
+			font-style: italic;
+			font-size: 90%;
+		}
+
+		.header h3 a {
+			color: black;
+		}
+
+		.header h4 {
+			margin: 0;
+			padding: 0;
+			display: inline-block;
+			font-weight: normal;
+			font-size: 83%;
+			padding-right: 2em;
+		}
+
+		.header form {
+			margin: 0;
+			padding: 0;
+			display: inline-block;
+			font-weight: normal;
+			font-size: 83%;
+		}
+
+		.main {
+			position: relative;
+			margin: 0 auto;
+			padding: 0;
+			width: 900px;
+		}
+
+		.article h1 {
+			text-align: center;
+			font-size: 200%;
+		}
+
+		.normal {
+			font-size: medium;
+			font-weight: normal;
+			text-align: center;
+			margin: 0;
+			padding: 0;
+		}
+
+		.article h2 {
+			font-size: 125%;
+			padding-top: 0.25em;
+		}
+
+		.article h3 {
+			font-size: 100%;
+		}
+	</style>
 </head>
 
 <body>
-	<h1>Blog in Express.JS</h1>
-	<h2>{{Payload.Title}}</h2>
-	<p>Created on: {{TimeToStringDate Payload.CreatedOn}}</p>
-	<p>Last updated: {{TimeToStringDate Payload.UpdatedOn}}</p>
+	<div class="header">
+		<h3><a href="/">Blog in Express.JS</a></h3>
+		<h4>Why not use Go?</h4>
 
-	<hr>
-	<div>
-		{{{Payload.Content}}}
+		<form method="POST" action="/edit">
+			<input type="hidden" name="PageID" value="{{Payload.ID}}">
+			<input type="submit" value="Edit">
+		</form>
 	</div>
-	<hr>
 
-	<form method="POST" action="/edit">
-		<input type="hidden" name="PageID" value="{{Payload.ID}}">
-		<input type="submit" value="Edit">
-	</form>
+	<div class="main">
+		<div class="article">
+			<h1>{{Payload.Title}}
+				<div class="normal">
+					Created on: {{Payload.CreatedOn}}
+				</div>
+			</h1>
+
+			{{{Payload.Content}}}
+		</div>
+	</div>
 </body>
 </html>

@@ -36,7 +36,7 @@ function BlogDisplayTmplHandler(r, w) {
 	var filename = GetPageFileName(pageID);
 
 	try {
-		var pageJSON = fs.readFileSync(filename);
+		var pageJSON = fs.readFileSync(filename, "utf8");
 	} catch(err) {
 		if (err.code == "ENOENT") {
 			tmpl.WriteTemplate(w, "error.hbs", 400, null, "blog page does not exist");
@@ -64,8 +64,10 @@ function BlogPagesHandler(r, w) {
 	try {
 		var pages = [];
 		files.forEach(function(file) {
-			var contents = fs.readFileSync(BlogDirName+"/"+file);
+			var contents = fs.readFileSync(BlogDirName+"/"+file, "utf8");
 			var page = JSON.parse(contents);
+			page.ID = file.slice(0, file.length-PageFileSuffix.length);
+			page.Content = undefined;
 			pages.push(page);
 		});
 	} catch(err) {

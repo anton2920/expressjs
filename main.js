@@ -2,6 +2,7 @@
 
 const index = require("./index.js");
 const signin = require("./signin.js");
+const signout = require("./signout.js");
 const signup = require("./signup.js");
 const tmpl = require("./tmpl.js");
 
@@ -19,8 +20,9 @@ function main() {
 	App.get("/", index.IndexTmplHandler);
 	App.get("/signin", signin.SigninTmplHandler);
 	App.get("/signup", signup.SignupTmplHandler);
-	
+
 	App.post(APIPrefix+"/signin", signin.SigninHandler);
+	App.get(APIPrefix+"/signout", signout.SignoutHandler);
 	
 	App.listen(Port, function() {
 		tmpl.InitTemplates();

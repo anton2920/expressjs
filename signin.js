@@ -28,8 +28,8 @@ function SigninHandler(r, w) {
 	}
 
 	const oneWeek = 7 * 24 * 60 * 60 * 1000;
-	const token = sessions.GenerateSessionToken();
-	const expiry = new Date(Date.now() + oneWeek);
+	var token = sessions.GenerateSessionToken();
+	var expiry = new Date(Date.now() + oneWeek);
 	sessions.Sessions.set(token, {
 		"ID": 1,
 		"Expiry": expiry,

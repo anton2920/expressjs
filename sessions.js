@@ -17,7 +17,7 @@ const Sessions = new Map();
 module.exports = { Sessions, GetSessionFromToken, GenerateSessionToken };
 
 function GetSessionFromToken(token) {
-	const session = Sessions.get(token)
+	var session = Sessions.get(token)
 	if (session == undefined) {
 		return undefined;
 	}
@@ -31,7 +31,5 @@ function GetSessionFromToken(token) {
 }
 
 function GenerateSessionToken() {
-	var bytes = Date.now();
-	bytes += crypto.randomBytes(64);
-	return Buffer.from(bytes).toString("base64");
+	return Buffer.from(Date.now() + crypto.randomBytes(56)).toString("base64");
 }

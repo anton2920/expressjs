@@ -8,9 +8,9 @@ const tmpl = require("./tmpl.js");
 function IndexTmplHandler(r, w) {
 	var signedIn = false;
 
-	const token = r.cookies["token"];
+	var token = r.cookies["token"];
 	if (token != undefined) {
-		const session = sessions.GetSessionFromToken(token);
+		var session = sessions.GetSessionFromToken(token);
 		if (session != undefined) {
 			signedIn = true;
 		}

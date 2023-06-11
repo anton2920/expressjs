@@ -11,7 +11,7 @@ function ParamsValidate(form, disallowUnknown, ...fields) {
 		return false;
 	}
 
-	for (const field of fields) {
+	for (var field of fields) {
 		if (form[field] == undefined) {
 			return false;
 		}

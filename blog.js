@@ -18,6 +18,12 @@ const PageFileSuffix = ".json";
 var PageFileIDLast = 0;
 
 function init() {
+	fs.mkdir(BlogDirName, { recursive: true }, function(err) {
+		if (err != null) {
+			console.log("ERROR: failed to create blog directory: ", err);
+			process.exit(1);
+		}
+	});
 	fs.readdir(BlogDirName, function(err, files) {
 		if (err != null) {
 			console.log("ERROR: failed to read blog directory: ", err);
@@ -39,17 +45,17 @@ function BlogCreateTmplHandler(r, w) {
 }
 
 function GetPageFileTitle() {
-	const pageID = (PageFileIDPad + PageFileIDLast).slice(-PageFileIDPad.length);
+	var pageID = (PageFileIDPad + PageFileIDLast).slice(-PageFileIDPad.length);
 	return BlogDirName + "/" + PageFilePrefix + pageID + PageFileSuffix;
 }
 
 function BlogCreateHandler(r, w) {
-	const token = r.cookies["token"]
+	var token = r.cookies["token"]
 	if (token == undefined) {
 		w.status(401);
 		return;
 	}
-	const session = sessions.GetSessionFromToken(token)
+	var session = sessions.GetSessionFromToken(token)
 	if (session == undefined) {
 		w.status(401);
 		return;

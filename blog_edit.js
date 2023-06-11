@@ -13,12 +13,12 @@ const fs = require("fs");
 function BlogEditTmplHandler(r, w) {
 	var token = r.cookies["token"]
 	if (token == undefined) {
-		w.status(401);
+		tmpl.WriteTemplate(w, "error.hbs", 401, null, errors.UnauthorizedError);
 		return;
 	}
 	var session = sessions.GetSessionFromToken(token)
 	if (session == undefined) {
-		w.status(401);
+		tmpl.WriteTemplate(w, "error.hbs", 401, null, errors.UnauthorizedError);
 		return;
 	}
 
@@ -50,12 +50,12 @@ function BlogEditTmplHandler(r, w) {
 function BlogEditHandler(r, w) {
 	var token = r.cookies["token"]
 	if (token == undefined) {
-		w.status(401);
+		tmpl.WriteTemplate(w, "error.hbs", 401, null, errors.UnauthorizedError);
 		return;
 	}
 	var session = sessions.GetSessionFromToken(token)
 	if (session == undefined) {
-		w.status(401);
+		tmpl.WriteTemplate(w, "error.hbs", 401, null, errors.UnauthorizedError);
 		return;
 	}
 

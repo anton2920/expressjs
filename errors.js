@@ -2,8 +2,9 @@
 
 const ReloadPageError = "whoops... Something went wrong. Please reload this page and try again";
 const TryAgainLaterError = "whoops... Something went wrong. Please try again later";
+const UnauthorizedError = "whoops... It appears you are not authorized to perform this action. Please sign in and try again";
 
-module.exports = { ReloadPageError, TryAgainLaterError, InvalidRouteHandler };
+module.exports = { ReloadPageError, TryAgainLaterError, InvalidRouteHandler, UnauthorizedError };
 
 const tmpl = require("./tmpl.js");
 

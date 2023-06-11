@@ -11,6 +11,17 @@ const utils = require("./utils.js");
 const fs = require("fs");
 
 function BlogCreateTmplHandler(r, w) {
+	var token = r.cookies["token"]
+	if (token == undefined) {
+		tmpl.WriteTemplate(w, "error.hbs", 401, null, errors.UnauthorizedError);
+		return;
+	}
+	var session = sessions.GetSessionFromToken(token)
+	if (session == undefined) {
+		tmpl.WriteTemplate(w, "error.hbs", 401, null, errors.UnauthorizedError);
+		return;
+	}
+
 	tmpl.WriteTemplate(w, "create.hbs", 200, null, null);
 }
 
@@ -24,12 +35,12 @@ function DateNowString() {
 function BlogCreateHandler(r, w) {
 	var token = r.cookies["token"]
 	if (token == undefined) {
-		w.status(401);
+		tmpl.WriteTemplate(w, "error.hbs", 401, null, errors.UnauthorizedError);
 		return;
 	}
 	var session = sessions.GetSessionFromToken(token)
 	if (session == undefined) {
-		w.status(401);
+		tmpl.WriteTemplate(w, "error.hbs", 401, null, errors.UnauthorizedError);
 		return;
 	}
 

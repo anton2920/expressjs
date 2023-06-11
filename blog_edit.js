@@ -31,7 +31,7 @@ function BlogEditTmplHandler(r, w) {
 	var filename = blog.GetPageFileName(pageID);
 
 	try {
-		var pageJSON = fs.readFileSync(filename, "utf-8");
+		var pageJSON = fs.readFileSync(filename);
 	} catch(err) {
 		if (err.code == "ENOENT") {
 			tmpl.WriteTemplate(w, "error.hbs", 400, null, "blog page does not exist");

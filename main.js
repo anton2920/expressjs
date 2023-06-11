@@ -24,20 +24,21 @@ function main() {
 	App.use(express.urlencoded({ extended: true }));
 	App.use(cookieParser());
 
-	App.get("/", index.IndexTmplHandler);
-	App.get("/create", blogCreate.BlogCreateTmplHandler);
+	App. get("/", index.IndexTmplHandler);
+	App. get("/create", blogCreate.BlogCreateTmplHandler);
 	App.post("/edit", blogEdit.BlogEditTmplHandler);
-	App.get("/page_:PageID([0-9]+)", blog.BlogDisplayTmplHandler);
-	App.get("/signin", signin.SigninTmplHandler);
-	App.get("/signup", signup.SignupTmplHandler);
+	App. get("/page_:PageID([0-9]+)", blog.BlogDisplayTmplHandler);
+	App. get("/signin", signin.SigninTmplHandler);
+	App. get("/signup", signup.SignupTmplHandler);
 
 	App.post(APIPrefix+"/create", blogCreate.BlogCreateHandler);
 	App.post(APIPrefix+"/edit", blogEdit.BlogEditHandler);
+	App. get(APIPrefix+"/pages", blog.BlogPagesHandler);
 	App.post(APIPrefix+"/signin", signin.SigninHandler);
-	App.get(APIPrefix+"/signout", signout.SignoutHandler);
+	App. get(APIPrefix+"/signout", signout.SignoutHandler);
 
 	App.get("*", errors.InvalidRouteHandler);
-	
+
 	App.listen(Port, function() {
 		console.log(`Listening on port ${Port}`);
 	});

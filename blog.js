@@ -3,6 +3,7 @@
 module.exports = { init, PageFileIDLast, GetPageFileName, BlogDisplayTmplHandler, BlogPagesHandler };
 
 const errors = require("./errors.js");
+const sessions = require("./sessions.js");
 const tmpl = require("./tmpl.js");
 
 const fs = require("fs");
@@ -32,6 +33,16 @@ function GetPageFileName(pageID) {
 }
 
 function BlogDisplayTmplHandler(r, w) {
+	var signedIn = false;
+
+	var token = r.cookies["token"];
+	if (token != undefined) {
+		var session = sessions.GetSessionFromToken(token);
+		if (session != undefined) {
+			signedIn = true;
+		}
+	}
+
 	var pageID = r.params["PageID"]
 	var filename = GetPageFileName(pageID);
 
@@ -48,6 +59,7 @@ function BlogDisplayTmplHandler(r, w) {
 	}
 	var page = JSON.parse(pageJSON);
 	page.ID = pageID;
+	page.SignedIn = signedIn;
 
 	tmpl.WriteTemplate(w, "page.hbs", 200, page, null);
 }

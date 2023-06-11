@@ -84,10 +84,12 @@
 		<h3><a href="/">Blog in Express.JS</a></h3>
 		<h4>Why not use Go?</h4>
 
+		{{#if Payload.SignedIn}}
 		<form method="POST" action="/edit">
 			<input type="hidden" name="PageID" value="{{Payload.ID}}">
 			<input type="submit" value="Edit">
 		</form>
+		{{/if}}
 	</div>
 
 	<div class="main">

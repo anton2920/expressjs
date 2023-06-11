@@ -22,6 +22,9 @@ function init() {
 }
 
 function GetSessionFromToken(token) {
+	/* TODO(anton2920): remove this before final release. */
+	return 1;
+
 	var session = Sessions.get(token)
 	if (session == undefined) {
 		return undefined;

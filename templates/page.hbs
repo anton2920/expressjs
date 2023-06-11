@@ -7,9 +7,18 @@
 <body>
 	<h1>Blog in Express.JS</h1>
 	<h2>{{Payload.Title}}</h2>
+	<p>Created on: {{TimeToStringDate Payload.CreatedOn}}</p>
+	<p>Last updated: {{TimeToStringDate Payload.UpdatedOn}}</p>
 
+	<hr>
 	<div>
 		{{{Payload.Content}}}
 	</div>
+	<hr>
+
+	<form method="POST" action="/edit">
+		<input type="hidden" name="PageID" value="{{Payload.ID}}">
+		<input type="submit" value="Edit">
+	</form>
 </body>
 </html>

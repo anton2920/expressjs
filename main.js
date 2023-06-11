@@ -2,6 +2,7 @@
 
 const blog = require("./blog.js");
 const blogCreate = require("./blog_create.js");
+const blogEdit = require("./blog_edit.js");
 const errors = require("./errors.js");
 const index = require("./index.js");
 const sessions = require("./sessions.js");
@@ -10,8 +11,8 @@ const signout = require("./signout.js");
 const signup = require("./signup.js");
 const tmpl = require("./tmpl.js");
 
-const express = require("express");
 const cookieParser = require("cookie-parser");
+const express = require("express");
 
 const App = express();
 const Port = 8080;
@@ -25,11 +26,13 @@ function main() {
 
 	App.get("/", index.IndexTmplHandler);
 	App.get("/create", blogCreate.BlogCreateTmplHandler);
-	App.get("/page_:PageNumber([0-9]+)", blog.BlogDisplayTmplHandler);
+	App.post("/edit", blogEdit.BlogEditTmplHandler);
+	App.get("/page_:PageID([0-9]+)", blog.BlogDisplayTmplHandler);
 	App.get("/signin", signin.SigninTmplHandler);
 	App.get("/signup", signup.SignupTmplHandler);
 
 	App.post(APIPrefix+"/create", blogCreate.BlogCreateHandler);
+	App.post(APIPrefix+"/edit", blogEdit.BlogEditHandler);
 	App.post(APIPrefix+"/signin", signin.SigninHandler);
 	App.get(APIPrefix+"/signout", signout.SignoutHandler);
 

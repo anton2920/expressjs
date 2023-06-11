@@ -44,8 +44,10 @@ function BlogCreateHandler(r, w) {
 		tmpl.WriteTemplate(w, "create.hbs", 400, r.body, `contents length must be between ${minContentsLen} and ${maxContentsLen} characters long`);
 		return;
 	}
+	r.body.CreatedOn = Date.now();
+	r.body.UpdatedOn = Date.now();
 
-	fs.writeFile(blog.GetPageFileTitle(), JSON.stringify(r.body), function(err) {
+	fs.writeFile(blog.GetPageFileName(blog.PageFileIDLast), JSON.stringify(r.body), function(err) {
 		if (err != null) {
 			console.log("ERROR: failed to store blog post: ", err);
 			tmpl.WriteTemplate(w, "error.hbs", 500, null, errors.TryAgainLaterError);

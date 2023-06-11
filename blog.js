@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = { init, PageFileIDLast, GetPageFileTitle, BlogDisplayTmplHandler };
+module.exports = { init, PageFileIDLast, GetPageFileName, BlogDisplayTmplHandler };
 
 const tmpl = require("./tmpl.js");
 
@@ -36,26 +36,28 @@ function init() {
 	module.exports.PageFileIDLast = PageFileIDLast;
 }
 
-function GetPageFileTitle() {
-	PageFileIDLast = module.exports.PageFileIDLast;
-	var pageID = (PageFileIDPad + PageFileIDLast).slice(-PageFileIDPad.length);
+function GetPageFileName(pageID) {
+	var pageID = (PageFileIDPad + pageID).slice(-PageFileIDPad.length);
 	return BlogDirName + "/" + PageFilePrefix + pageID + PageFileSuffix;
 }
 
 function BlogDisplayTmplHandler(r, w) {
-	var filename = BlogDirName + "/" + PageFilePrefix + r.params["PageNumber"] + PageFileSuffix;
-	
+	var pageID = r.params["PageID"]
+	var filename = GetPageFileName(pageID);
+
 	try {
 		var pageJSON = fs.readFileSync(filename, "utf-8");
-	} catch(e) {
-		if (e.code == "ENOENT") {
+	} catch(err) {
+		if (err.code == "ENOENT") {
 			tmpl.WriteTemplate(w, "error.hbs", 400, null, "blog page does not exist");
 		} else {
+			console.log("ERROR: failed to open page file: ", err);
 			tmpl.WriteTemplate(w, "error.hbs", 500, null, errors.TryAgainLaterError);
 		}
 		return;
 	}
 	var page = JSON.parse(pageJSON);
+	page.ID = pageID;
 
 	tmpl.WriteTemplate(w, "page.hbs", 200, page, null);
 }

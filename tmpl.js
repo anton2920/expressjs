@@ -24,7 +24,9 @@ function InitTemplates() {
 
 	handlebars.registerHelper("TimeToStringDate", function(t) {
 		var date = new Date(t);
-		return date.toString();
+		var offset = date.getTimezoneOffset()
+		date = new Date(date.getTime() - (offset*60*1000))
+		return date.toISOString().split('T')[0]
 	});
 }
 
